@@ -1,0 +1,82 @@
+{
+  "name": "@mcp-z/oauth",
+  "version": "0.0.0",
+  "description": "Multi-account orchestration and secure token storage for OAuth-based MCP servers",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "oauth",
+    "oauth2",
+    "authentication",
+    "multi-account",
+    "account-management",
+    "token-storage",
+    "secure-storage",
+    "keyv",
+    "mcp-server",
+    "oauth-google",
+    "oauth-microsoft",
+    "config-management",
+    "encryption",
+    "duckdb",
+    "ai",
+    "claude"
+  ],
+  "homepage": "https://github.com/mcp-z/oauth#readme",
+  "bugs": {
+    "url": "https://github.com/mcp-z/oauth/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcp-z/oauth.git"
+  },
+  "license": "MIT",
+  "author": "Kevin Malakoff <kmalakoff.info@gmail.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsds build",
+    "format": "tsds format",
+    "prepublish:check": "ncp",
+    "prepublishOnly": "tsds validate",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:engines": "nvu engines tsds test:node --no-timeouts 'test/**/*.test.ts'",
+    "test:integration": "tsds test:node --no-timeouts 'test/integration/**/*.test.ts'",
+    "test:unit": "tsds test:node --no-timeouts 'test/unit/**/*.test.ts'",
+    "version": "tsds version"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "jose": "^6.1.3",
+    "keyv": "^5.5.5",
+    "keyv-file": "^5.3.3",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.0.2",
+    "node-version-use": "^2.1.6",
+    "ts-dev-stack": "^1.21.3",
+    "tsds-config": "^1.0.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "tsds": {
+    "source": "src/index.ts"
+  }
+}
