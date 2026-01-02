@@ -3,7 +3,7 @@
  */
 
 import type { Keyv } from 'keyv';
-import type { AuthEmailProvider, Logger } from '../../types.ts';
+import type { AccountAuthProvider, Logger } from '../../types.ts';
 
 /**
  * Configuration for loopback OAuth account management.
@@ -13,7 +13,7 @@ export interface AccountLoopbackConfig {
   service: string;
   store: Keyv;
   logger: Logger;
-  auth: AuthEmailProvider;
+  auth: AccountAuthProvider;
 }
 
 /**

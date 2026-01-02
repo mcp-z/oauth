@@ -27,9 +27,10 @@ export { getErrorTemplate, getSuccessTemplate } from './templates.ts';
 
 // Public types - core interfaces that consumers use
 export type {
+  // Provider interfaces
+  AccountAuthProvider,
   // Account management types
   AccountInfo,
-  // Provider interfaces
   AuthEmailProvider,
   AuthFlowDescriptor,
   AuthMiddlewareWrapper,

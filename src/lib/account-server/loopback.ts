@@ -13,6 +13,7 @@
 
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { addAccount, getAccountInfo, getActiveAccount, getLinkedAccounts, removeAccount, setAccountInfo, setActiveAccount } from '../../account-utils.ts';
 import type { AccountInfo, McpPrompt, McpTool } from '../../types.ts';
@@ -105,13 +106,13 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
           }
 
           // Not linked or no email provided - trigger OAuth flow for new account
-          // Check if provider supports interactive authentication
-          if (!auth.authenticateNewAccount) {
-            throw new Error('Account switching requires interactive authentication. ' + 'The current auth provider does not support authenticateNewAccount().');
-          }
+          // Force an OAuth flow by passing a unique accountId to bypass any active account.
+          await auth.getAccessToken(`new:${randomUUID()}`);
 
-          // Trigger new authentication with account selection
-          email = await auth.authenticateNewAccount();
+          email = await getActiveAccount(store, { service });
+          if (!email) {
+            throw new Error('OAuth flow completed without setting an active account');
+          }
 
           // Check if account already exists (in case OAuth returned different email than requested)
           isNew = !existingAccounts.includes(email);

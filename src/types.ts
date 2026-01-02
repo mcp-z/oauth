@@ -152,10 +152,13 @@ export class RequiresAuthenticationError extends AccountManagerError {
   }
 }
 
-export interface AuthEmailProvider {
+export interface AccountAuthProvider {
+  getAccessToken(accountId?: string): Promise<string>;
   getUserEmail(accountId?: string): Promise<string>;
-  authenticateNewAccount?(): Promise<string>;
 }
+
+// TODO: Remove AuthEmailProvider alias in a future major release.
+export type AuthEmailProvider = AccountAuthProvider;
 
 export interface UserAuthProvider {
   getUserId(req: unknown): Promise<string>; // Throws if auth invalid

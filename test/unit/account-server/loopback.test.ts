@@ -1,8 +1,8 @@
 import assert from 'assert';
 import Keyv from 'keyv';
-import { addAccount, getAccountInfo, getActiveAccount, setAccountInfo } from '../../../src/account-utils.ts';
+import { addAccount, getAccountInfo, getActiveAccount, setAccountInfo, setActiveAccount } from '../../../src/account-utils.ts';
 import { createLoopback } from '../../../src/lib/account-server/loopback.ts';
-import type { AccountInfo, AuthEmailProvider } from '../../../src/types.ts';
+import type { AccountAuthProvider, AccountInfo } from '../../../src/types.ts';
 
 describe('AccountServer.createLoopback', () => {
   const service = 'gmail';
@@ -16,9 +16,13 @@ describe('AccountServer.createLoopback', () => {
   describe('Tool: account-switch', () => {
     it('adds first account and sets it as active', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
+          await addAccount(store, { service, accountId: 'user1@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user1@gmail.com' });
+          return 'token';
+        },
         getUserEmail: async () => 'user1@gmail.com',
-        authenticateNewAccount: async () => 'user1@gmail.com',
       };
 
       const { tools } = createLoopback({ service, store, logger, auth });
@@ -42,14 +46,16 @@ describe('AccountServer.createLoopback', () => {
       const store = new Keyv();
       let emailIndex = 0;
       const emails = ['user1@gmail.com', 'user2@gmail.com'];
-      const auth: AuthEmailProvider = {
-        getUserEmail: async () => {
-          const email = emails[emailIndex];
-          if (!email) throw new Error('No more emails');
-          return email;
-        },
-        authenticateNewAccount: async () => {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
           const email = emails[emailIndex++];
+          if (!email) throw new Error('No more emails');
+          await addAccount(store, { service, accountId: email });
+          await setActiveAccount(store, { service, accountId: email });
+          return 'token';
+        },
+        getUserEmail: async () => {
+          const email = emails[Math.max(0, emailIndex - 1)];
           if (!email) throw new Error('No more emails');
           return email;
         },
@@ -78,9 +84,13 @@ describe('AccountServer.createLoopback', () => {
 
     it('re-linking existing account does not duplicate', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
+          await addAccount(store, { service, accountId: 'user1@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user1@gmail.com' });
+          return 'token';
+        },
         getUserEmail: async () => 'user1@gmail.com',
-        authenticateNewAccount: async () => 'user1@gmail.com',
       };
 
       const { tools } = createLoopback({ service, store, logger, auth });
@@ -102,9 +112,13 @@ describe('AccountServer.createLoopback', () => {
 
     it('stores account alias when provided', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
+          await addAccount(store, { service, accountId: 'user1@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user1@gmail.com' });
+          return 'token';
+        },
         getUserEmail: async () => 'user1@gmail.com',
-        authenticateNewAccount: async () => 'user1@gmail.com',
       };
 
       const { tools } = createLoopback({ service, store, logger, auth });
@@ -121,11 +135,12 @@ describe('AccountServer.createLoopback', () => {
     it('smart switch: switches to already-linked account by email without OAuth', async () => {
       const store = new Keyv();
       let oauthCallCount = 0;
-      const auth: AuthEmailProvider = {
-        getUserEmail: async () => {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
           oauthCallCount++;
-          return 'user1@gmail.com';
+          throw new Error('OAuth should not be triggered for already-linked account');
         },
+        getUserEmail: async () => 'user1@gmail.com',
       };
 
       // Setup: Add two accounts
@@ -157,11 +172,12 @@ describe('AccountServer.createLoopback', () => {
     it('smart switch: switches to already-linked account by alias without OAuth', async () => {
       const store = new Keyv();
       let oauthCallCount = 0;
-      const auth: AuthEmailProvider = {
-        getUserEmail: async () => {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
           oauthCallCount++;
-          return 'user1@gmail.com';
+          throw new Error('OAuth should not be triggered for already-linked account');
         },
+        getUserEmail: async () => 'user1@gmail.com',
       };
 
       // Setup: Add two accounts, second with alias
@@ -198,12 +214,14 @@ describe('AccountServer.createLoopback', () => {
     it('smart switch: triggers OAuth when email provided but not linked', async () => {
       const store = new Keyv();
       let oauthCallCount = 0;
-      const auth: AuthEmailProvider = {
-        getUserEmail: async () => 'user2@gmail.com',
-        authenticateNewAccount: async () => {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
           oauthCallCount++;
-          return 'user2@gmail.com';
+          await addAccount(store, { service, accountId: 'user2@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user2@gmail.com' });
+          return 'token';
         },
+        getUserEmail: async () => 'user2@gmail.com',
       };
 
       // Setup: Add only first account
@@ -233,13 +251,14 @@ describe('AccountServer.createLoopback', () => {
     it('smart switch: handles OAuth returning different email than requested', async () => {
       const store = new Keyv();
       let oauthCallCount = 0;
-      const auth: AuthEmailProvider = {
-        getUserEmail: async () => 'user1@gmail.com',
-        authenticateNewAccount: async () => {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
           oauthCallCount++;
-          // Simulate user selecting a different account during OAuth
-          return 'user2@gmail.com';
+          await addAccount(store, { service, accountId: 'user2@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user2@gmail.com' });
+          return 'token';
         },
+        getUserEmail: async () => 'user1@gmail.com',
       };
 
       // Setup: Add only first account
@@ -250,7 +269,7 @@ describe('AccountServer.createLoopback', () => {
       assert.ok(switchTool);
 
       // Request to switch to a DIFFERENT account that's not linked
-      // OAuth should be triggered via authenticateNewAccount
+      // OAuth should be triggered via getAccessToken
       const result = await switchTool.handler({ email: 'user2@gmail.com' });
 
       assert.ok(result.structuredContent);
@@ -260,12 +279,15 @@ describe('AccountServer.createLoopback', () => {
       // Should successfully add the new account via OAuth
       assert.strictEqual(data.email, 'user2@gmail.com', 'Should return user2@gmail.com from OAuth flow');
       assert.strictEqual(data.isNew, true, 'Should recognize user2 as new account');
-      assert.strictEqual(oauthCallCount, 1, 'OAuth should be triggered once via authenticateNewAccount');
+      assert.strictEqual(oauthCallCount, 1, 'OAuth should be triggered once via getAccessToken');
     });
 
     it('smart switch: updates alias when switching to already-linked account', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
+          throw new Error('OAuth should not be triggered for already-linked account');
+        },
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -288,7 +310,8 @@ describe('AccountServer.createLoopback', () => {
   describe('Tool: account-remove', () => {
     it('removes specified account', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -310,7 +333,8 @@ describe('AccountServer.createLoopback', () => {
 
     it('switches to another account when removing active account', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -332,7 +356,8 @@ describe('AccountServer.createLoopback', () => {
 
     it('finds account by alias', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -359,7 +384,8 @@ describe('AccountServer.createLoopback', () => {
 
     it('throws error when account not found', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -379,7 +405,8 @@ describe('AccountServer.createLoopback', () => {
   describe('Tool: account-list', () => {
     it('returns empty array when no accounts', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -399,7 +426,8 @@ describe('AccountServer.createLoopback', () => {
 
     it('returns all linked accounts with active status', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -429,7 +457,8 @@ describe('AccountServer.createLoopback', () => {
 
     it('includes alias when present', async () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
@@ -460,7 +489,8 @@ describe('AccountServer.createLoopback', () => {
   describe('Tool count', () => {
     it('provides exactly 4 tools', () => {
       const store = new Keyv();
-      const auth: AuthEmailProvider = {
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => 'token',
         getUserEmail: async () => 'user1@gmail.com',
       };
 
