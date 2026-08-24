@@ -109,10 +109,11 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
           // Force an OAuth flow by passing a unique accountId to bypass any active account.
           await auth.getAccessToken(`new:${randomUUID()}`);
 
-          email = await getActiveAccount(store, { service });
-          if (!email) {
+          const activeEmail = await getActiveAccount(store, { service });
+          if (!activeEmail) {
             throw new Error('OAuth flow completed without setting an active account');
           }
+          email = activeEmail;
 
           // Check if account already exists (in case OAuth returned different email than requested)
           isNew = !existingAccounts.includes(email);
