@@ -285,7 +285,7 @@ export function sanitizeForLogging(message: string, meta?: Record<string, unknow
 
 export function sanitizeForLoggingFormatter() {
   return {
-    log: (obj) => {
+    log: (obj: Record<string, unknown>) => {
       const message = (obj.msg || obj.message || '') as string;
       const { message: clean, meta } = sanitizeForLogging(message, obj as Record<string, unknown>);
       return { ...meta, msg: clean };
