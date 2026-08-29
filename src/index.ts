@@ -15,6 +15,8 @@ export { type AccountKeyParams, type AccountKeyType, createAccountKey, createSer
 export { type AccountLoopbackConfig, AccountServer, type AccountStatelessConfig, createLoopback, createStateless } from './lib/account-server/index.ts';
 // DCR types - Public API
 export type { DcrClientInformation, DcrClientMetadata, DcrConfig, DcrErrorResponse, ProviderTokens } from './lib/dcr-types.ts';
+// Browser launch - replaces the ESM-only `open` package
+export { default as openUrl } from './lib/open-url.ts';
 // RFC Metadata Types - Public API
 export type { RFC8414Metadata, RFC9728Metadata } from './lib/rfc-metadata-types.ts';
 export { generatePKCE, type PKCEPair } from './pkce.ts';
