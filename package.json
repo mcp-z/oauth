@@ -59,9 +59,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "jose": "^6.0.0",
     "keyv": "^5.0.0",
-    "keyv-file": "^5.0.0",
+    "keyv-file": "5.3.3",
     "zod": "^4.0.0"
   },
   "devDependencies": {
