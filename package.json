@@ -1,6 +1,6 @@
 {
   "name": "@mcp-z/oauth",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Multi-account orchestration and secure token storage for OAuth-based MCP servers",
   "keywords": [
     "mcp",
