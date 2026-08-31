@@ -1,7 +1,6 @@
 # @mcp-z/oauth
 
-Docs: https://mcp-z.github.io/oauth
-Multi-account OAuth orchestration and token storage for MCP servers.
+Docs: https://mcp-z.github.io/oauth Multi-account OAuth orchestration and token storage for MCP servers.
 
 ## Common uses
 
