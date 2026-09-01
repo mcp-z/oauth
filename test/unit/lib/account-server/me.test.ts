@@ -1,8 +1,8 @@
+import type { CachedToken } from '@mcp-z/oauth';
+import { addAccount, setToken } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
-import { addAccount, setToken } from '../../../src/account-utils.ts';
-import { createAccountMe } from '../../../src/lib/account-server/me.ts';
-import type { CachedToken } from '../../../src/types.ts';
+import { createAccountMe } from '../../../../src/lib/account-server/me.ts';
 
 describe('createAccountMe', () => {
   const service = 'gmail';
