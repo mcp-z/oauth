@@ -5,9 +5,9 @@
  * and challenge pairs for OAuth 2.0 PKCE flow (RFC 7636).
  */
 
+import { generatePKCE } from '@mcp-z/oauth';
 import assert from 'assert';
 import { createHash } from 'crypto';
-import { generatePKCE } from '../../src/pkce.ts';
 
 describe('pkce', () => {
   describe('generatePKCE', () => {

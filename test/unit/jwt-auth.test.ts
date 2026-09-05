@@ -1,8 +1,8 @@
+import type { JWTUserAuthConfig } from '@mcp-z/oauth';
+import { JWTUserAuth } from '@mcp-z/oauth';
 import assert from 'assert';
 import { constants, createHmac, createPrivateKey, createPublicKey, sign as cryptoSign, generateKeyPairSync } from 'crypto';
 import * as http from 'http';
-import { JWTUserAuth } from '../../src/jwt-auth.ts';
-import type { JWTUserAuthConfig } from '../../src/types.ts';
 
 const SECRET = 'test-jwt-secret-0123456789-abcdefgh';
 const ISSUER = 'https://auth.example.com';

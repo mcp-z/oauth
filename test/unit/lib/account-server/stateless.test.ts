@@ -1,5 +1,5 @@
+import { createStateless } from '@mcp-z/oauth';
 import assert from 'assert';
-import { createStateless } from '../../../src/lib/account-server/stateless.ts';
 
 describe('AccountServer.createStateless', () => {
   const service = 'gmail';

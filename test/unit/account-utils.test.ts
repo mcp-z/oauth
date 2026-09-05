@@ -1,7 +1,8 @@
+import type { AccountInfo } from '@mcp-z/oauth';
+import { addAccount, getActiveAccount, getToken, removeAccount, setAccountInfo, setActiveAccount, setToken } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
-import { addAccount, getAccountInfo, getActiveAccount, getLinkedAccounts, getToken, removeAccount, setAccountInfo, setActiveAccount, setToken } from '../../src/account-utils.ts';
-import type { AccountInfo } from '../../src/types.ts';
+import { getAccountInfo, getLinkedAccounts } from '../../src/account-utils.ts';
 
 describe('account-manager', () => {
   describe('active account management', () => {

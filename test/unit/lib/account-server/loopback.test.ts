@@ -1,8 +1,8 @@
+import type { AccountAuthProvider, AccountInfo } from '@mcp-z/oauth';
+import { addAccount, createLoopback, getActiveAccount, setAccountInfo, setActiveAccount } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
-import { addAccount, getAccountInfo, getActiveAccount, setAccountInfo, setActiveAccount } from '../../../src/account-utils.ts';
-import { createLoopback } from '../../../src/lib/account-server/loopback.ts';
-import type { AccountAuthProvider, AccountInfo } from '../../../src/types.ts';
+import { getAccountInfo } from '../../../../src/account-utils.ts';
 
 describe('AccountServer.createLoopback', () => {
   const service = 'gmail';
