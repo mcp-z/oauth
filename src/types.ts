@@ -3,7 +3,6 @@
  */
 
 import type { CallToolResult, GetPromptResult, ServerContext, StandardSchemaWithJSON, ToolAnnotations } from '@modelcontextprotocol/server';
-import type { z } from 'zod';
 
 export type Logger = Pick<Console, 'info' | 'error' | 'warn' | 'debug'>;
 
@@ -47,8 +46,8 @@ export interface AccountInfo {
  *   name: "gmail-message-send",
  *   config: {
  *     description: "Send an email message",
- *     inputSchema: { to: { type: "string" }, subject: { type: "string" } },
- *     outputSchema: { result: { type: "object" } }
+ *     inputSchema: z.object({ to: z.string(), subject: z.string() }),
+ *     outputSchema: z.object({ result: z.object({}) })
  *   },
  *   handler: async (args, context) => {
  *     // Implementation
@@ -63,8 +62,8 @@ export interface McpTool {
   name: string;
   config: {
     description: string;
-    inputSchema: Record<string, unknown>;
-    outputSchema: Record<string, unknown>;
+    inputSchema: StandardSchemaWithJSON;
+    outputSchema: StandardSchemaWithJSON;
   };
   handler: (args: unknown, context?: unknown) => Promise<CallToolResult>;
 }
@@ -226,8 +225,8 @@ export interface CachedToken {
 export type ToolConfig = {
   title?: string;
   description?: string;
-  inputSchema?: Record<string, z.ZodType> | StandardSchemaWithJSON;
-  outputSchema?: Record<string, z.ZodType> | StandardSchemaWithJSON;
+  inputSchema?: StandardSchemaWithJSON;
+  outputSchema?: StandardSchemaWithJSON;
   annotations?: ToolAnnotations;
   _meta?: Record<string, unknown>;
 };

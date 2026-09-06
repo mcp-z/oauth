@@ -91,7 +91,8 @@ describe('AccountServer.createStateless', () => {
       const { tools } = createStateless({ service });
       const statusTool = tools[0];
       assert.ok(statusTool);
-      assert.deepStrictEqual(statusTool.config.inputSchema, {});
+      const inputJson = statusTool.config.inputSchema['~standard'].jsonSchema.input({ target: 'draft-2020-12' }) as { properties?: Record<string, unknown> };
+      assert.deepStrictEqual(Object.keys(inputJson.properties ?? {}), []);
     });
 
     it('has output schema with discriminated union', () => {
@@ -99,7 +100,8 @@ describe('AccountServer.createStateless', () => {
       const statusTool = tools[0];
       assert.ok(statusTool);
       assert.ok(statusTool.config.outputSchema);
-      assert.ok(statusTool.config.outputSchema.result);
+      const outputJson = statusTool.config.outputSchema['~standard'].jsonSchema.output({ target: 'draft-2020-12' }) as { properties?: Record<string, unknown> };
+      assert.ok(outputJson.properties?.result);
     });
   });
 });

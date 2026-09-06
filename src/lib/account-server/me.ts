@@ -57,8 +57,8 @@ export function createAccountMe(config: AccountMeConfig): { tools: McpTool[]; pr
       name: 'account-me',
       config: {
         description: `Show current ${service} user identity. Returns email, alias (if set), and session expiry information.`,
-        inputSchema: {} as const,
-        outputSchema: {
+        inputSchema: z.object({}),
+        outputSchema: z.object({
           result: z.discriminatedUnion('type', [
             z.object({
               type: z.literal('success'),
@@ -69,7 +69,7 @@ export function createAccountMe(config: AccountMeConfig): { tools: McpTool[]; pr
               message: z.string(),
             }),
           ]),
-        } as const,
+        }),
       },
       handler: async (_args: unknown, extra?: unknown): Promise<CallToolResult> => {
         try {
