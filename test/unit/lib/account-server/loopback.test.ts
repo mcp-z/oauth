@@ -1,8 +1,8 @@
+import type { AccountAuthProvider, AccountInfo } from '@mcp-z/oauth';
+import { addAccount, createLoopback, getActiveAccount, setAccountInfo, setActiveAccount } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
-import { addAccount, getAccountInfo, getActiveAccount, setAccountInfo, setActiveAccount } from '../../../src/account-utils.ts';
-import { createLoopback } from '../../../src/lib/account-server/loopback.ts';
-import type { AccountAuthProvider, AccountInfo } from '../../../src/types.ts';
+import { getAccountInfo } from '../../../../src/account-utils.ts';
 
 describe('AccountServer.createLoopback', () => {
   const service = 'gmail';
@@ -32,7 +32,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'user1@gmail.com');
       assert.strictEqual(data.isNew, true);
@@ -72,7 +72,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'user2@gmail.com');
       assert.strictEqual(data.isNew, true);
@@ -104,7 +104,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'user1@gmail.com');
       assert.strictEqual(data.isNew, false);
@@ -155,7 +155,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({ email: 'user2@gmail.com' });
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean; message: string };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean; message: string } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'user2@gmail.com');
       assert.strictEqual(data.isNew, false);
@@ -198,7 +198,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({ email: 'work' });
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'user2@gmail.com');
       assert.strictEqual(data.isNew, false);
@@ -235,7 +235,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({ email: 'user2@gmail.com' });
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'user2@gmail.com');
       assert.strictEqual(data.isNew, true);
@@ -273,7 +273,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await switchTool.handler({ email: 'user2@gmail.com' });
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; isNew: boolean };
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
       assert.strictEqual(data.type, 'success');
 
       // Should successfully add the new account via OAuth
@@ -326,7 +326,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await removeTool.handler({ accountId: 'user1@gmail.com' });
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; removed: string };
+      const data = (result.structuredContent as { result: { type: string; removed: string } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.removed, 'user1@gmail.com');
     });
@@ -377,7 +377,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await removeTool.handler({ accountId: 'work' });
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; removed: string };
+      const data = (result.structuredContent as { result: { type: string; removed: string } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.removed, 'user1@gmail.com');
     });
@@ -417,7 +417,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await listTool.handler({});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; accounts: Array<unknown>; totalAccounts: number; message: string };
+      const data = (result.structuredContent as { result: { type: string; accounts: Array<unknown>; totalAccounts: number; message: string } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.accounts.length, 0);
       assert.strictEqual(data.totalAccounts, 0);
@@ -442,7 +442,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await listTool.handler({});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; accounts: Array<{ email: string; isActive: boolean }> };
+      const data = (result.structuredContent as { result: { type: string; accounts: Array<{ email: string; isActive: boolean }> } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.accounts.length, 2);
       const account0 = data.accounts[0];
@@ -478,7 +478,7 @@ describe('AccountServer.createLoopback', () => {
       const result = await listTool.handler({});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; accounts: Array<{ email: string; alias?: string }> };
+      const data = (result.structuredContent as { result: { type: string; accounts: Array<{ email: string; alias?: string }> } }).result;
       assert.strictEqual(data.type, 'success');
       const account0 = data.accounts[0];
       assert.ok(account0);
