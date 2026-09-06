@@ -50,7 +50,7 @@
     "build": "tsds build",
     "format": "tsds format",
     "prepublish:check": "ncp",
-    "prepublishOnly": "tsds validate",
+    "prepublishOnly": "node scripts/require-dist-tag.cjs && tsds validate",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines tsds test:node --no-timeouts",
     "version": "tsds version"
@@ -66,8 +66,7 @@
     "@types/node": "^26.2.0",
     "node-version-use": "^2.1.6",
     "ts-dev-stack": "^1.21.3",
-    "tsds-config": "^1.0.0",
-    "typescript": "^7.0.2"
+    "tsds-config": "^1.0.0"
   },
   "engines": {
     "node": ">=18"

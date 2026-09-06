@@ -38,11 +38,11 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
       name: 'account-switch',
       config: {
         description: `Use ${service} account (smart mode). If email/alias provided and already linked, switches to it without triggering OAuth. If not linked or no email provided, triggers OAuth browser flow to add account. Returns account email, whether it was newly added, and total account count.`,
-        inputSchema: {
+        inputSchema: z.object({
           email: z.string().optional().describe('Email address to link (if already linked, switches without OAuth)'),
           alias: z.string().optional().describe('Optional alias for easy identification'),
-        } as const,
-        outputSchema: {
+        }),
+        outputSchema: z.object({
           result: z.discriminatedUnion('type', [
             z.object({
               type: z.literal('success'),
@@ -52,7 +52,7 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
               message: z.string(),
             }),
           ]),
-        } as const,
+        }),
       },
       handler: async (args: unknown): Promise<CallToolResult> => {
         const params = args as { email?: string; alias?: string };
@@ -166,10 +166,10 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
       name: 'account-remove',
       config: {
         description: `Remove ${service} account and delete stored tokens permanently. If removing the active account, the first remaining account becomes active. Requires email or alias parameter.`,
-        inputSchema: {
+        inputSchema: z.object({
           accountId: z.string().min(1).describe('Email address or alias of account to remove'),
-        } as const,
-        outputSchema: {
+        }),
+        outputSchema: z.object({
           result: z.discriminatedUnion('type', [
             z.object({
               type: z.literal('success'),
@@ -180,7 +180,7 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
               message: z.string(),
             }),
           ]),
-        } as const,
+        }),
       },
       handler: async (args: unknown): Promise<CallToolResult> => {
         const params = args as { accountId: string };
@@ -244,8 +244,8 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
       name: 'account-list',
       config: {
         description: `List all linked ${service} accounts with their aliases and active status.`,
-        inputSchema: {} as const,
-        outputSchema: {
+        inputSchema: z.object({}),
+        outputSchema: z.object({
           result: z.discriminatedUnion('type', [
             z.object({
               type: z.literal('success'),
@@ -261,7 +261,7 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
               message: z.string(),
             }),
           ]),
-        } as const,
+        }),
       },
       handler: async (): Promise<CallToolResult> => {
         try {
