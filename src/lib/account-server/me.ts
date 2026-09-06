@@ -10,8 +10,8 @@
  * Tool: {service}-account-me
  */
 
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import type { CallToolResult } from '@modelcontextprotocol/server';
+import { ProtocolError, ProtocolErrorCode } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 import { getAccountInfo, getActiveAccount, getToken } from '../../account-utils.ts';
 import type { CachedToken, McpPrompt, McpTool } from '../../types.ts';
@@ -149,7 +149,7 @@ export function createAccountMe(config: AccountMeConfig): { tools: McpTool[]; pr
           const message = error instanceof Error ? error.message : String(error);
           logger?.error?.('account-me.error', { service, error: message });
 
-          throw new McpError(ErrorCode.InternalError, `Error getting ${service} account info: ${message}`, {
+          throw new ProtocolError(ProtocolErrorCode.InternalError, `Error getting ${service} account info: ${message}`, {
             stack: error instanceof Error ? error.stack : undefined,
           });
         }

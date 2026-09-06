@@ -1,5 +1,5 @@
+import { createStateless } from '@mcp-z/oauth';
 import assert from 'assert';
-import { createStateless } from '../../../src/lib/account-server/stateless.ts';
 
 describe('AccountServer.createStateless', () => {
   const service = 'gmail';
@@ -15,7 +15,7 @@ describe('AccountServer.createStateless', () => {
       const result = await meTool.handler({}, extra);
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; service: string; email: string; sessionExpiresIn: null; message: string };
+      const data = (result.structuredContent as { result: { type: string; service: string; email: string; sessionExpiresIn: null; message: string } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.service, 'gmail');
       assert.strictEqual(data.email, 'test@example.com');
@@ -32,7 +32,7 @@ describe('AccountServer.createStateless', () => {
       const result = await meTool.handler({}, extra);
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { service: string };
+      const data = (result.structuredContent as { result: { service: string } }).result;
       assert.strictEqual(data.service, 'outlook');
     });
 

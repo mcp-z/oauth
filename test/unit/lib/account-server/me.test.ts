@@ -1,8 +1,8 @@
+import type { CachedToken } from '@mcp-z/oauth';
+import { addAccount, setToken } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
-import { addAccount, setToken } from '../../../src/account-utils.ts';
-import { createAccountMe } from '../../../src/lib/account-server/me.ts';
-import type { CachedToken } from '../../../src/types.ts';
+import { createAccountMe } from '../../../../src/lib/account-server/me.ts';
 
 describe('createAccountMe', () => {
   const service = 'gmail';
@@ -23,7 +23,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, extra);
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { type: string; email: string; sessionExpiresIn: null };
+      const data = (result.structuredContent as { result: { type: string; email: string; sessionExpiresIn: null } }).result;
       assert.strictEqual(data.type, 'success');
       assert.strictEqual(data.email, 'test@example.com');
       assert.strictEqual(data.sessionExpiresIn, null);
@@ -59,7 +59,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, extra);
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { service: string };
+      const data = (result.structuredContent as { result: { service: string } }).result;
       assert.strictEqual(data.service, 'outlook');
     });
   });
@@ -110,7 +110,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.ok(data.sessionExpiresIn);
       assert.ok(data.sessionExpiresIn.includes('h')); // Should be in hours format
     });
@@ -136,7 +136,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.strictEqual(data.sessionExpiresIn, 'expired');
     });
 
@@ -160,7 +160,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.strictEqual(data.sessionExpiresIn, 'never');
     });
 
@@ -178,7 +178,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.strictEqual(data.sessionExpiresIn, 'never');
     });
   });
@@ -204,7 +204,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.ok(data.sessionExpiresIn);
       assert.ok(data.sessionExpiresIn.endsWith('s')); // Should be in seconds format
     });
@@ -229,7 +229,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.ok(data.sessionExpiresIn);
       assert.ok(data.sessionExpiresIn.includes('m')); // Should be in minutes format
       assert.ok(!data.sessionExpiresIn.includes('h')); // Should NOT include hours
@@ -255,7 +255,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.ok(data.sessionExpiresIn);
       assert.ok(data.sessionExpiresIn.includes('h'));
     });
@@ -280,7 +280,7 @@ describe('createAccountMe', () => {
       const result = await meTool.handler({}, {});
 
       assert.ok(result.structuredContent);
-      const data = result.structuredContent.result as { sessionExpiresIn?: string };
+      const data = (result.structuredContent as { result: { sessionExpiresIn?: string } }).result;
       assert.ok(data.sessionExpiresIn);
       assert.ok(data.sessionExpiresIn.includes('h'));
       assert.ok(data.sessionExpiresIn.includes('m'));

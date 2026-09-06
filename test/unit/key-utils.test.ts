@@ -1,5 +1,6 @@
+import { createAccountKey, createServiceKey } from '@mcp-z/oauth';
 import assert from 'assert';
-import { createAccountKey, createServiceKey, parseTokenKey } from '../../src/key-utils.ts';
+import { parseTokenKey } from '../../src/key-utils.ts';
 
 describe('key-utils', () => {
   describe('createAccountKey', () => {

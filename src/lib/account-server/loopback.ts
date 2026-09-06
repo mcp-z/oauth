@@ -11,8 +11,8 @@
  * - account-list: Show all linked accounts (returns empty array if none)
  */
 
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import type { CallToolResult } from '@modelcontextprotocol/server';
+import { ProtocolError, ProtocolErrorCode } from '@modelcontextprotocol/server';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { addAccount, getAccountInfo, getActiveAccount, getLinkedAccounts, removeAccount, setAccountInfo, setActiveAccount } from '../../account-utils.ts';
@@ -154,7 +154,7 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
           };
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
-          throw new McpError(ErrorCode.InternalError, `Error switching ${service} account: ${message}`, {
+          throw new ProtocolError(ProtocolErrorCode.InternalError, `Error switching ${service} account: ${message}`, {
             stack: error instanceof Error ? error.stack : undefined,
           });
         }
@@ -232,7 +232,7 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
           };
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
-          throw new McpError(ErrorCode.InternalError, `Error removing ${service} account: ${message}`, {
+          throw new ProtocolError(ProtocolErrorCode.InternalError, `Error removing ${service} account: ${message}`, {
             stack: error instanceof Error ? error.stack : undefined,
           });
         }
@@ -311,7 +311,7 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
           };
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
-          throw new McpError(ErrorCode.InternalError, `Error listing ${service} accounts: ${message}`, {
+          throw new ProtocolError(ProtocolErrorCode.InternalError, `Error listing ${service} accounts: ${message}`, {
             stack: error instanceof Error ? error.stack : undefined,
           });
         }

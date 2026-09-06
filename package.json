@@ -56,10 +56,10 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/server": "^2.0.0",
     "keyv": "^5.0.0",
     "keyv-file": "5.3.3",
-    "zod": "^4.0.0"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -71,12 +71,6 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "allowScripts": {
-    "node-filename-to-dist-paths": true,
-    "node-semvers": true,
-    "node-version-use": true,
-    "thread-sleep-compat": true
   },
   "tsds": {
     "source": "src/index.ts"

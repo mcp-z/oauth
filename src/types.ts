@@ -2,10 +2,8 @@
  * Type definitions for multi-account management and OAuth integration
  */
 
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AnySchema, ZodRawShapeCompat } from '@modelcontextprotocol/sdk/server/zod-compat.js';
-import type { RequestHandlerExtra } from '@modelcontextprotocol/sdk/shared/protocol.js';
-import type { CallToolResult, GetPromptResult, ServerNotification, ServerRequest, ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
+import type { CallToolResult, GetPromptResult, ServerContext, StandardSchemaWithJSON, ToolAnnotations } from '@modelcontextprotocol/server';
+import type { z } from 'zod';
 
 export type Logger = Pick<Console, 'info' | 'error' | 'warn' | 'debug'>;
 
@@ -220,7 +218,7 @@ export interface CachedToken {
  * collapse to 'never' when using ToolModule[] arrays. The deep conditional types from
  * Parameters<> cannot be unified across array elements.
  *
- * Validated against SDK signature for compatibility - compile errors if SDK changes.
+ * Not compiler-enforced - the mirror is maintained by hand against the SDK's registerTool config.
  *
  * NOTE: This type is duplicated in @mcp-z/server for architectural independence.
  * Keep these definitions synchronized manually when updating.
@@ -228,21 +226,17 @@ export interface CachedToken {
 export type ToolConfig = {
   title?: string;
   description?: string;
-  inputSchema?: ZodRawShapeCompat | AnySchema;
-  outputSchema?: ZodRawShapeCompat | AnySchema;
+  inputSchema?: Record<string, z.ZodType> | StandardSchemaWithJSON;
+  outputSchema?: Record<string, z.ZodType> | StandardSchemaWithJSON;
   annotations?: ToolAnnotations;
   _meta?: Record<string, unknown>;
 };
-
-// Compile-time validation that ToolConfig is compatible with SDK
-type _ValidateToolConfigAssignable = ToolConfig extends Parameters<McpServer['registerTool']>[1] ? true : never;
-type _ValidateToolConfigReceivable = Parameters<McpServer['registerTool']>[1] extends ToolConfig ? true : never;
 
 /**
  * Tool handler signature with generic support for middleware.
  *
  * @template TArgs - Tool arguments type (default: unknown for SDK compatibility)
- * @template TExtra - Request handler extra type (default: RequestHandlerExtra from SDK)
+ * @template TExtra - Request handler context type (default: ServerContext from the SDK)
  *
  * Defaults provide SDK-extracted types for compatibility with MCP SDK.
  * Generic parameters enable type-safe middleware transformation.
@@ -250,7 +244,7 @@ type _ValidateToolConfigReceivable = Parameters<McpServer['registerTool']>[1] ex
  * NOTE: This interface is duplicated in @mcp-z/server for architectural independence.
  * Keep these definitions synchronized manually when updating.
  */
-export type ToolHandler<TArgs = unknown, TExtra = RequestHandlerExtra<ServerRequest, ServerNotification>> = (args: TArgs, extra: TExtra) => Promise<CallToolResult>;
+export type ToolHandler<TArgs = unknown, TExtra = ServerContext> = (args: TArgs, extra: TExtra) => Promise<CallToolResult>;
 
 /**
  * Tool module interface with bounded generics.
@@ -320,7 +314,7 @@ export interface ToolModule<TConfig = ToolConfig, THandler = unknown> {
  * @see {@link ToolModule} for base tool interface
  * @see {@link ToolHandler} for handler function signature
  */
-export type AuthMiddlewareWrapper<TArgs = unknown, TExtra = RequestHandlerExtra<ServerRequest, ServerNotification>> = (toolModule: ToolModule) => ToolModule<ToolConfig, ToolHandler<TArgs, TExtra>>;
+export type AuthMiddlewareWrapper<TArgs = unknown, TExtra = ServerContext> = (toolModule: ToolModule) => ToolModule<ToolConfig, ToolHandler<TArgs, TExtra>>;
 
 /**
  * Base interface for stateful OAuth adapters (LoopbackOAuthProvider pattern)

@@ -1,6 +1,6 @@
 # @mcp-z/oauth
 
-Docs: https://mcp-z.github.io/oauth Multi-account OAuth orchestration and token storage for MCP servers.
+Multi-account orchestration and secure token storage for OAuth-based MCP servers
 
 ## Common uses
 
@@ -68,3 +68,7 @@ Use `sanitizeForLoggingFormatter` to avoid leaking secrets in logs.
 ## Requirements
 
 - Node.js >= 22
+
+### Documentation
+
+[API Docs](https://mcp-z.github.io/oauth)
