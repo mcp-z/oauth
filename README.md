@@ -7,6 +7,13 @@ Multi-account orchestration and secure token storage for OAuth-based MCP servers
 - Add consistent account tools to MCP servers
 - Store OAuth tokens with a shared config and storage backend
 - Reuse the same account lifecycle across Google and Microsoft providers
+- Resolve public Client ID Metadata Documents (CIMD) safely for authorization servers
+
+## Client ID Metadata Documents
+
+`createCimdResolver()` resolves a public HTTPS `client_id` metadata document with SSRF protections: public-unicast DNS validation pinned into the request, no redirects, a 5 KiB JSON response limit, bounded caching, and per-client request limiting. Local development can explicitly allow HTTP loopback documents with `allowHttpLoopback: true`.
+
+In production, route this traffic through an egress proxy or network policy that blocks internal destinations (for example, Smokescreen-style controls). That defense composes with the resolver's application-level checks.
 
 ## Install
 

@@ -11,6 +11,8 @@ export interface RFC8414Metadata {
   token_endpoint: string;
   /** Dynamic Client Registration endpoint (RFC 7591) */
   registration_endpoint: string;
+  /** Whether client IDs may identify public metadata documents. */
+  client_id_metadata_document_supported?: boolean;
   /** Optional: Token revocation endpoint */
   revocation_endpoint?: string;
   /** Optional: Supported OAuth scopes */

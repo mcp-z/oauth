@@ -13,6 +13,8 @@ export { JWTUserAuth } from './jwt-auth.ts';
 export { type AccountKeyParams, type AccountKeyType, createAccountKey, createServiceKey, listAccountIds, type ServiceKeyParams, type ServiceKeyType } from './key-utils.ts';
 // Account server and factory functions - Public API
 export { type AccountLoopbackConfig, AccountServer, type AccountStatelessConfig, createLoopback, createStateless } from './lib/account-server/index.ts';
+// Client ID Metadata Documents - Public API
+export { type CimdClientMetadataDocument, type CimdResolver, CimdResolverError, type CimdResolverOptions, createCimdResolver } from './lib/cimd-resolver.ts';
 // DCR types - Public API
 export type { DcrClientInformation, DcrClientMetadata, DcrConfig, DcrErrorResponse, ProviderTokens } from './lib/dcr-types.ts';
 // Browser launch - replaces the ESM-only `open` package
