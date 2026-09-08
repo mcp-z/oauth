@@ -19,8 +19,8 @@
 <li><span id="targs"><span class="tsd-kind-type-parameter">TArgs</span> = <span class="tsd-signature-type">unknown</span></span>
 <div class="tsd-comment tsd-typography"><p>Tool arguments type (default: unknown for SDK compatibility)</p>
 </div></li>
-<li><span id="textra"><span class="tsd-kind-type-parameter">TExtra</span> = <span class="tsd-signature-type">RequestHandlerExtra</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ServerRequest</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">ServerNotification</span><span class="tsd-signature-symbol">&gt;</span></span>
-<div class="tsd-comment tsd-typography"><p>Request handler extra type (default: RequestHandlerExtra from SDK)</p>
+<li><span id="textra"><span class="tsd-kind-type-parameter">TExtra</span> = <span class="tsd-signature-type">ServerContext</span></span>
+<div class="tsd-comment tsd-typography"><p>Request handler context type (default: ServerContext from the SDK)</p>
 <p>Defaults provide SDK-extracted types for compatibility with MCP SDK.
 Generic parameters enable type-safe middleware transformation.</p>
 <p>NOTE: This interface is duplicated in @mcp-z/server for architectural independence.
@@ -40,7 +40,7 @@ Keep these definitions synchronized manually when updating.</p>
 <li><span><span class="tsd-kind-parameter">extra</span>: <a class="tsd-signature-type tsd-kind-type-parameter" href="#textra">TExtra</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallToolResult</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/97519acc41944ff33e76cab92807ded7582ea674/src/types.ts#L253">types.ts:253</a></li></ul></aside></div>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/b793685a29abb1ec86aec3d561674c68e200be5d/src/types.ts#L246">types.ts:246</a></li></ul></aside></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
