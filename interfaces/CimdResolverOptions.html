@@ -12,7 +12,7 @@
 <h1>Interface CimdResolverOptions</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">CimdResolverOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#allowhttploopback">allowHttpLoopback</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#defaultttlms">defaultTtlMs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#lookup">lookup</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><br/>        <span class="tsd-kind-parameter">hostname</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>        <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">all</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">verbatim</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/>        <span class="tsd-kind-parameter">callback</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><br/>            <span class="tsd-kind-parameter">error</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ErrnoException</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">,</span><br/>            <span class="tsd-kind-parameter">addresses</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">address</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">family</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">,</span><br/>        <span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxbodybytes">maxBodyBytes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxcacheentries">maxCacheEntries</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxratelimitentries">maxRateLimitEntries</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxttlms">maxTtlMs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ratelimitms">rateLimitMs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#timeoutms">timeoutMs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L26">lib/cimd-resolver.ts:26</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L26">lib/cimd-resolver.ts:26</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -39,63 +39,63 @@
 <div class="tsd-comment tsd-typography"><p>Explicit development-only escape hatch for http:// loopback documents.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L28">lib/cimd-resolver.ts:28</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L28">lib/cimd-resolver.ts:28</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="defaultttlms"><code class="tsd-tag">Optional</code><span>default<wbr/>Ttl<wbr/>Ms</span><a href="#defaultttlms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">defaultTtlMs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Default success-cache lifetime in milliseconds.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L36">lib/cimd-resolver.ts:36</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L36">lib/cimd-resolver.ts:36</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="lookup"><code class="tsd-tag">Optional</code><span>lookup</span><a href="#lookup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">lookup</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">hostname</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">all</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">verbatim</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">callback</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><br/>        <span class="tsd-kind-parameter">error</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ErrnoException</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">,</span><br/>        <span class="tsd-kind-parameter">addresses</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">address</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">family</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span></div>
 <div class="tsd-comment tsd-typography"><p>DNS implementation, injectable for deterministic tests.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L30">lib/cimd-resolver.ts:30</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L30">lib/cimd-resolver.ts:30</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxbodybytes"><code class="tsd-tag">Optional</code><span>max<wbr/>Body<wbr/>Bytes</span><a href="#maxbodybytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxBodyBytes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Maximum response size in bytes.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L34">lib/cimd-resolver.ts:34</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L34">lib/cimd-resolver.ts:34</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxcacheentries"><code class="tsd-tag">Optional</code><span>max<wbr/>Cache<wbr/>Entries</span><a href="#maxcacheentries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxCacheEntries</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Maximum cached documents; least recently used entries are evicted.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L40">lib/cimd-resolver.ts:40</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L40">lib/cimd-resolver.ts:40</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxratelimitentries"><code class="tsd-tag">Optional</code><span>max<wbr/>Rate<wbr/>Limit<wbr/>Entries</span><a href="#maxratelimitentries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxRateLimitEntries</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Maximum tracked client IDs for rate limiting.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L44">lib/cimd-resolver.ts:44</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L44">lib/cimd-resolver.ts:44</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxttlms"><code class="tsd-tag">Optional</code><span>max<wbr/>Ttl<wbr/>Ms</span><a href="#maxttlms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxTtlMs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Upper bound for origin-provided cache lifetimes in milliseconds.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L38">lib/cimd-resolver.ts:38</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L38">lib/cimd-resolver.ts:38</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="ratelimitms"><code class="tsd-tag">Optional</code><span>rate<wbr/>Limit<wbr/>Ms</span><a href="#ratelimitms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">rateLimitMs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Minimum time between resolution attempts for one client ID.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L42">lib/cimd-resolver.ts:42</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L42">lib/cimd-resolver.ts:42</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="timeoutms"><code class="tsd-tag">Optional</code><span>timeout<wbr/>Ms</span><a href="#timeoutms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">timeoutMs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Per request connect/read deadline in milliseconds.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/56ce126cd4b1ab24b8fcd5e2a2d58223459ac699/src/lib/cimd-resolver.ts#L32">lib/cimd-resolver.ts:32</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/mcp-z/oauth/blob/bf2719ff6efe45a83ee7193f3ae07062e85a68cd/src/lib/cimd-resolver.ts#L32">lib/cimd-resolver.ts:32</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
