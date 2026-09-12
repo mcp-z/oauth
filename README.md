@@ -1,6 +1,6 @@
 # @mcp-z/oauth
 
-Multi-account orchestration and secure token storage for OAuth-based MCP servers
+Multi-account orchestration and secure token storage for OAuth-based MCP servers.
 
 ## Common uses
 
@@ -28,14 +28,6 @@ npm install keyv-duckdb
 npm install keyv-file
 ```
 
-## Initialize token storage
-
-```bash
-npx @mcp-z/oauth init
-```
-
-This creates a `.tokens/` directory and a default config file for token storage.
-
 ## Account tools and modes
 
 Use `AccountServer` to add account tools to your MCP server.
@@ -60,13 +52,11 @@ When using stateless auth (DCR/bearer tokens), only this tool is available:
 ```ts
 import { AccountServer } from '@mcp-z/oauth';
 
-const { tools, prompts } = AccountServer.createLoopback({
-  service: 'gmail',
-  store: tokenStore,
-  logger,
-  auth: authProvider
-});
+const { tools, prompts } = AccountServer.createStateless({ service: 'gmail' });
+// Register these tools and prompts with your MCP server.
 ```
+
+Use `createLoopback` when the server manages multiple stored accounts. It requires a Keyv store, logger, and OAuth provider from your application. `createStateless` needs only the service name and reports the account represented by the MCP client's bearer token.
 
 ## Logging helper
 
@@ -74,8 +64,8 @@ Use `sanitizeForLoggingFormatter` to avoid leaking secrets in logs.
 
 ## Requirements
 
-- Node.js >= 22
+- Node.js >= 18
 
-### Documentation
+## Documentation
 
 [API Docs](https://mcp-z.github.io/oauth)
