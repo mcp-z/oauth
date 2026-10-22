@@ -1,5 +1,5 @@
 import type { AccountAuthProvider, AccountInfo } from '@mcp-z/oauth';
-import { AuthRequiredError, addAccount, createLoopback, getActiveAccount, setAccountInfo, setActiveAccount } from '@mcp-z/oauth';
+import { AuthRequiredError, addAccount, createAccountKey, createLoopback, getActiveAccount, setAccountInfo, setActiveAccount } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
 import { getAccountInfo } from '../../../../src/account-utils.ts';
@@ -286,6 +286,33 @@ describe('AccountServer.createLoopback', () => {
       assert.deepStrictEqual(opened, [authUrl]);
       assert.deepStrictEqual(waited, ['state-123']);
       assert.deepStrictEqual(deleted, ['state-123']);
+    });
+
+    it('requests OAuth with an accountId that is a valid storage key segment', async () => {
+      const store = new Keyv();
+      const requested: (string | undefined)[] = [];
+      const auth: AccountAuthProvider = {
+        getAccessToken: async (accountId) => {
+          requested.push(accountId);
+          await addAccount(store, { service, accountId: 'user1@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user1@gmail.com' });
+          return 'token';
+        },
+        getUserEmail: async () => 'user1@gmail.com',
+      };
+
+      const { tools } = createLoopback({ service, store, logger, auth });
+      const switchTool = tools.find((t) => t.name === 'account-switch');
+      assert.ok(switchTool);
+
+      await switchTool.handler({});
+
+      assert.strictEqual(requested.length, 1);
+      const accountId = requested[0];
+      assert.ok(accountId);
+      // Storage keys are "{accountId}:{service}:{type}" and reject ':' in accountId
+      assert.ok(!accountId.includes(':'), `accountId must not contain ':' (got ${accountId})`);
+      assert.doesNotThrow(() => createAccountKey('token', { accountId, service }));
     });
 
     it('headless: returns auth URL in error instead of opening a browser', async () => {

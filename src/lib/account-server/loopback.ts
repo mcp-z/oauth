@@ -109,8 +109,9 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
 
           // Not linked or no email provided - trigger OAuth flow for new account
           // Force an OAuth flow by passing a unique accountId to bypass any active account.
+          // No ':' here - accountId becomes part of the storage key and validateKeyParams rejects colons.
           try {
-            await auth.getAccessToken(`new:${randomUUID()}`);
+            await auth.getAccessToken(`new-${randomUUID()}`);
           } catch (error) {
             // Loopback providers throw auth_url and expect the auth middleware to open + poll.
             // account-switch is not behind that middleware, so complete the flow here.
