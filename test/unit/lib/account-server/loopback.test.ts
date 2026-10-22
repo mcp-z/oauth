@@ -1,5 +1,5 @@
 import type { AccountAuthProvider, AccountInfo } from '@mcp-z/oauth';
-import { addAccount, createLoopback, getActiveAccount, setAccountInfo, setActiveAccount } from '@mcp-z/oauth';
+import { AuthRequiredError, addAccount, createLoopback, getActiveAccount, setAccountInfo, setActiveAccount } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
 import { getAccountInfo } from '../../../../src/account-utils.ts';
@@ -246,6 +246,71 @@ describe('AccountServer.createLoopback', () => {
       // Verify new account is active
       const activeAccount = await getActiveAccount(store, { service });
       assert.strictEqual(activeAccount, 'user2@gmail.com');
+    });
+
+    it('completes auth_url flow: opens URL, waits for callback, then activates account', async () => {
+      const store = new Keyv();
+      const authUrl = 'https://accounts.example.com/auth?state=state-123';
+      const opened: string[] = [];
+      const waited: string[] = [];
+      const deleted: string[] = [];
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
+          throw new AuthRequiredError({ kind: 'auth_url', provider: service, url: authUrl });
+        },
+        getUserEmail: async () => 'user1@gmail.com',
+        waitForOAuthCompletion: async (state) => {
+          waited.push(state);
+          // Simulate the OAuth callback persisting the account
+          await addAccount(store, { service, accountId: 'user1@gmail.com' });
+          await setActiveAccount(store, { service, accountId: 'user1@gmail.com' });
+        },
+        deletePendingAuth: async (state) => {
+          deleted.push(state);
+        },
+      };
+
+      const openUrl = async (url: string) => {
+        opened.push(url);
+      };
+      const { tools } = createLoopback({ service, store, logger, auth, openUrl });
+      const switchTool = tools.find((t) => t.name === 'account-switch');
+      assert.ok(switchTool);
+
+      const result = await switchTool.handler({ email: 'user1@gmail.com' });
+
+      const data = (result.structuredContent as { result: { type: string; email: string; isNew: boolean } }).result;
+      assert.strictEqual(data.type, 'success');
+      assert.strictEqual(data.email, 'user1@gmail.com');
+      assert.strictEqual(data.isNew, true);
+      assert.deepStrictEqual(opened, [authUrl]);
+      assert.deepStrictEqual(waited, ['state-123']);
+      assert.deepStrictEqual(deleted, ['state-123']);
+    });
+
+    it('headless: returns auth URL in error instead of opening a browser', async () => {
+      const store = new Keyv();
+      const authUrl = 'https://accounts.example.com/auth?state=state-456';
+      const opened: string[] = [];
+      const auth: AccountAuthProvider = {
+        getAccessToken: async () => {
+          throw new AuthRequiredError({ kind: 'auth_url', provider: service, url: authUrl });
+        },
+        getUserEmail: async () => 'user1@gmail.com',
+        waitForOAuthCompletion: async () => {
+          throw new Error('should not wait in headless mode');
+        },
+      };
+
+      const openUrl = async (url: string) => {
+        opened.push(url);
+      };
+      const { tools } = createLoopback({ service, store, logger, auth, headless: true, openUrl });
+      const switchTool = tools.find((t) => t.name === 'account-switch');
+      assert.ok(switchTool);
+
+      await assert.rejects(switchTool.handler({}), (err: Error) => err.message.includes(authUrl));
+      assert.deepStrictEqual(opened, []);
     });
 
     it('smart switch: handles OAuth returning different email than requested', async () => {

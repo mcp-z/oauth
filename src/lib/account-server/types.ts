@@ -14,6 +14,10 @@ export interface AccountLoopbackConfig {
   store: Keyv;
   logger: Logger;
   auth: AccountAuthProvider;
+  // When true, account-switch returns the auth URL instead of opening a browser and waiting
+  headless?: boolean;
+  // Override how the auth URL is opened (defaults to openUrl)
+  openUrl?: (url: string) => Promise<void>;
 }
 
 /**

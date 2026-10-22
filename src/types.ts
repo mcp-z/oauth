@@ -152,6 +152,9 @@ export class RequiresAuthenticationError extends AccountManagerError {
 export interface AccountAuthProvider {
   getAccessToken(accountId?: string): Promise<string>;
   getUserEmail(accountId?: string): Promise<string>;
+  // Optional: lets account-switch complete an interactive auth_url flow (block until the callback lands, then clean up)
+  waitForOAuthCompletion?(state: string): Promise<unknown>;
+  deletePendingAuth?(state: string): Promise<void>;
 }
 
 // TODO: Remove AuthEmailProvider alias in a future major release.

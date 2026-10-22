@@ -17,6 +17,8 @@ import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { addAccount, getAccountInfo, getActiveAccount, getLinkedAccounts, removeAccount, setAccountInfo, setActiveAccount } from '../../account-utils.ts';
 import type { AccountInfo, McpPrompt, McpTool } from '../../types.ts';
+import { AuthRequiredError } from '../../types.ts';
+import defaultOpenUrl from '../open-url.ts';
 import { createAccountMe } from './me.ts';
 import { findAccountByEmailOrAlias } from './shared-utils.ts';
 import type { AccountLoopbackConfig } from './types.ts';
@@ -26,7 +28,7 @@ import type { AccountLoopbackConfig } from './types.ts';
  * Returns 4 tools: account-me, account-switch, account-remove, account-list.
  */
 export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[]; prompts: McpPrompt[] } {
-  const { service, store, logger, auth } = config;
+  const { service, store, logger, auth, headless = false, openUrl = defaultOpenUrl } = config;
 
   // Create account-me tool
   const meTools = createAccountMe({ service, store, logger, mode: 'loopback' });
@@ -107,7 +109,23 @@ export function createLoopback(config: AccountLoopbackConfig): { tools: McpTool[
 
           // Not linked or no email provided - trigger OAuth flow for new account
           // Force an OAuth flow by passing a unique accountId to bypass any active account.
-          await auth.getAccessToken(`new:${randomUUID()}`);
+          try {
+            await auth.getAccessToken(`new:${randomUUID()}`);
+          } catch (error) {
+            // Loopback providers throw auth_url and expect the auth middleware to open + poll.
+            // account-switch is not behind that middleware, so complete the flow here.
+            if (!(error instanceof AuthRequiredError && error.descriptor.kind === 'auth_url')) throw error;
+            const authUrl = error.descriptor.url;
+            const state = new URL(authUrl).searchParams.get('state');
+            if (headless || !state || !auth.waitForOAuthCompletion) {
+              throw new Error(`Authorization required. Open this URL in a browser, then call account-switch again: ${authUrl}`);
+            }
+            openUrl(authUrl).catch((e) => {
+              logger.info('Failed to open browser automatically', { error: e instanceof Error ? e.message : String(e), url: authUrl });
+            });
+            await auth.waitForOAuthCompletion(state);
+            await auth.deletePendingAuth?.(state);
+          }
 
           const activeEmail = await getActiveAccount(store, { service });
           if (!activeEmail) {
