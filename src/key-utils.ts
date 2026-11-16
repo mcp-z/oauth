@@ -153,7 +153,8 @@ export function parseTokenKey(key: string): { accountId: string; service: string
  *
  * @param store - Keyv store to iterate
  * @param service - Service name
- * @returns Array of account IDs (e.g., email addresses)
+ * @returns Array of account IDs (e.g., email addresses); empty if the store does not support iteration
+ * @throws If the store fails while iterating (adapter error or unreadable entry)
  *
  * @example
  * const accounts = await listAccountIds(store, 'gmail');
@@ -167,22 +168,16 @@ export function parseTokenKey(key: string): { accountId: string; service: string
 export async function listAccountIds(store: Keyv, service: string): Promise<string[]> {
   const accountIds: string[] = [];
 
-  try {
-    const iterator = store.iterator?.(undefined);
-    if (!iterator) {
-      return accountIds;
-    }
-
-    for await (const [key] of iterator) {
-      const parsed = parseTokenKey(key);
-      if (parsed && parsed.service === service) {
-        accountIds.push(parsed.accountId);
-      }
-    }
-  } catch (_error) {
-    // If iteration fails, return empty array (fail gracefully)
-    // This handles stores that don't support iteration
+  const iterator = store.iterator?.(undefined);
+  if (!iterator) {
     return accountIds;
+  }
+
+  for await (const [key] of iterator) {
+    const parsed = parseTokenKey(key);
+    if (parsed && parsed.service === service) {
+      accountIds.push(parsed.accountId);
+    }
   }
 
   return accountIds;

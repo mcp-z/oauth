@@ -87,6 +87,24 @@ describe('createAccountMe', () => {
     });
   });
 
+  describe('Loopback mode - Unreadable token', () => {
+    it('throws instead of reporting a session that never expires', async () => {
+      const map = new Map<string, unknown>();
+      const store = new Keyv(map);
+      const accountId = 'user@gmail.com';
+      await addAccount(store, { service, accountId });
+      map.set(`keyv:${accountId}:${service}:token`, '{corrupt');
+
+      const { tools } = createAccountMe({ service, store, logger, mode: 'loopback' });
+      const meTool = tools.find((t) => t.name === 'account-me');
+      assert.ok(meTool);
+
+      await assert.rejects(async () => {
+        await meTool.handler({}, {});
+      }, /Error getting gmail account info/);
+    });
+  });
+
   describe('Loopback mode - Token expiry scenarios', () => {
     it('shows time remaining when token has future expiry', async () => {
       const store = new Keyv();

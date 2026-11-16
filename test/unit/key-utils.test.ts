@@ -1,5 +1,6 @@
-import { createAccountKey, createServiceKey } from '@mcp-z/oauth';
+import { createAccountKey, createServiceKey, listAccountIds } from '@mcp-z/oauth';
 import assert from 'assert';
+import Keyv from 'keyv';
 import { parseTokenKey } from '../../src/key-utils.ts';
 
 describe('key-utils', () => {
@@ -138,6 +139,24 @@ describe('key-utils', () => {
       assert.strictEqual(parts[0], 'user@gmail.com');
       assert.strictEqual(parts[1], 'gmail');
       assert.strictEqual(parts[2], 'token');
+    });
+  });
+
+  describe('listAccountIds', () => {
+    it('returns only the requested service account IDs', async () => {
+      const store = new Keyv(new Map());
+      await store.set('a@x.com:gmail:token', { accessToken: 't' });
+      await store.set('b@x.com:gmail:token', { accessToken: 't' });
+      await store.set('c@x.com:outlook:token', { accessToken: 't' });
+      assert.deepStrictEqual((await listAccountIds(store, 'gmail')).sort(), ['a@x.com', 'b@x.com']);
+    });
+
+    it('rejects when the store holds an unreadable entry', async () => {
+      const map = new Map<string, unknown>();
+      const store = new Keyv(map);
+      await store.set('a@x.com:gmail:token', { accessToken: 't' });
+      map.set('keyv:b@x.com:gmail:token', '{corrupt');
+      await assert.rejects(listAccountIds(store, 'gmail'));
     });
   });
 });

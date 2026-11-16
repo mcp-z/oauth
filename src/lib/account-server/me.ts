@@ -114,21 +114,16 @@ export function createAccountMe(config: AccountMeConfig): { tools: McpTool[]; pr
 
           // Calculate session expiry
           let sessionExpiresIn: string | null = null;
-          try {
-            const token = await getToken<CachedToken>(store, { accountId: activeAccountId, service });
-            if (token?.expiresAt) {
-              const now = Date.now();
-              if (token.expiresAt > now) {
-                sessionExpiresIn = formatDuration(token.expiresAt - now);
-              } else {
-                sessionExpiresIn = 'expired';
-              }
+          const token = await getToken<CachedToken>(store, { accountId: activeAccountId, service });
+          if (token?.expiresAt) {
+            const now = Date.now();
+            if (token.expiresAt > now) {
+              sessionExpiresIn = formatDuration(token.expiresAt - now);
             } else {
-              // No expiry = JWT-based service account or no token info
-              sessionExpiresIn = 'never';
+              sessionExpiresIn = 'expired';
             }
-          } catch {
-            // Token not found or error reading - treat as "never" (service account pattern)
+          } else {
+            // No expiry = JWT-based service account or no token info
             sessionExpiresIn = 'never';
           }
 

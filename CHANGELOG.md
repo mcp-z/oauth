@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.4] - 2026-11-16
+
+### Fixed
+
+- `listAccountIds()` and the `account-me` token read no longer hide token-store errors. A store failure while listing accounts used to return a partial or empty list, and an unreadable token was reported as a working session that "never" expires; both now reject with the store's error. With default Keyv stores a corrupt stored entry is reported this way; errors raised inside a store adapter reach the caller only when the Keyv instance has `throwOnErrors: true`.
+
 ## [2.1.0] - 2026-09-07
 
 ### Added
