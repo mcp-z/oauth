@@ -16,7 +16,9 @@ export { type AccountLoopbackConfig, AccountServer, type AccountStatelessConfig,
 // Client ID Metadata Documents - Public API
 export { type CimdClientMetadataDocument, type CimdResolver, CimdResolverError, type CimdResolverOptions, createCimdResolver } from './lib/cimd-resolver.ts';
 // DCR types - Public API
-export type { DcrClientInformation, DcrClientMetadata, DcrConfig, DcrErrorResponse, ProviderTokens } from './lib/dcr-types.ts';
+export type { AccessToken, AuthorizationCode, DcrClientInformation, DcrClientMetadata, DcrConfig, DcrErrorResponse, ProviderTokens, RegisteredClient } from './lib/dcr-types.ts';
+// DCR storage utilities - Public API
+export * as dcrUtils from './lib/dcr-utils.ts';
 // Browser launch - replaces the ESM-only `open` package
 export { default as openUrl } from './lib/open-url.ts';
 // RFC Metadata Types - Public API

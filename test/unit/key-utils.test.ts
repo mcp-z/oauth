@@ -2,6 +2,7 @@ import { createAccountKey, createServiceKey, listAccountIds } from '@mcp-z/oauth
 import assert from 'assert';
 import Keyv from 'keyv';
 import { parseTokenKey } from '../../src/key-utils.ts';
+import { plantCorruptEntry } from '../lib/corrupt-entry.ts';
 
 describe('key-utils', () => {
   describe('createAccountKey', () => {
@@ -155,7 +156,7 @@ describe('key-utils', () => {
       const map = new Map<string, unknown>();
       const store = new Keyv(map);
       await store.set('a@x.com:gmail:token', { accessToken: 't' });
-      map.set('keyv:b@x.com:gmail:token', '{corrupt');
+      await plantCorruptEntry(store, map, 'b@x.com:gmail:token');
       await assert.rejects(listAccountIds(store, 'gmail'));
     });
   });

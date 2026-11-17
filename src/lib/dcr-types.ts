@@ -156,3 +156,58 @@ export interface DcrErrorResponse {
   /** OPTIONAL: Human-readable ASCII description */
   error_description?: string;
 }
+
+// =============================================================================
+// DCR Internal Types
+// =============================================================================
+
+/**
+ * Registered client with full metadata
+ * Extends DcrClientInformation with internal timestamps
+ * @internal
+ */
+export interface RegisteredClient extends DcrClientInformation {
+  /** Creation timestamp (milliseconds since epoch) */
+  created_at: number;
+}
+
+/**
+ * Authorization code data structure
+ * @public
+ */
+export interface AuthorizationCode {
+  code: string;
+  client_id: string;
+  redirect_uri: string;
+  scope: string;
+  code_challenge?: string;
+  code_challenge_method?: string;
+  /** Set for CIMD public clients; absent for DCR registrations. */
+  client_type?: 'cimd';
+  /** Provider tokens obtained during authorization */
+  providerTokens: ProviderTokens;
+  created_at: number;
+  expires_at: number;
+}
+
+/**
+ * Access token data structure
+ * @public
+ */
+export interface AccessToken {
+  access_token: string;
+  token_type: 'Bearer';
+  expires_in: number;
+  refresh_token?: string;
+  scope: string;
+  client_id: string;
+  /** Set for CIMD public clients; absent for DCR registrations. */
+  client_type?: 'cimd';
+  /** Provider tokens */
+  providerTokens: ProviderTokens;
+  created_at: number;
+}
+
+// =============================================================================
+// Schema Types
+// =============================================================================

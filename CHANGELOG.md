@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.2.0]
+
+### Added
+
+- DCR storage helpers moved here from `@mcp-z/oauth-google` and `@mcp-z/oauth-microsoft`, exported as `dcrUtils` (`registerClient`, `getClient`, `validateClient`, `validateRedirectUri`, `listClients`, `deleteClient`, token and auth-code get/set/delete, `persistProviderTokenRefresh`, ...). The `AccessToken`, `AuthorizationCode` and `RegisteredClient` types are exported too.
+
+### Changed
+
+- The `keyv` dependency range is `^5.5.5 || ^6.1.0`: the package works with Keyv instances from either major, and uses the copy your project installs. Keys are not migrated between the two majors; a store written by keyv 5 is not read by keyv 6 under the same keys.
+- `keyv-file` moved from `dependencies` to `devDependencies`. The package never imported it; install it yourself if you build a file store.
+
+### Fixed
+
+- `dcrUtils.listClients()` returns only `dcr:client:` entries under every keyv version; keyv 6 ignores the prefix passed to `iterator()`, so tokens would otherwise have been returned as clients.
+
 ## [2.1.4] - 2026-11-16
 
 ### Fixed

@@ -8,15 +8,17 @@ const SECRET = 'test-jwt-secret-0123456789-abcdefgh';
 const ISSUER = 'https://auth.example.com';
 const AUDIENCE = 'api.example.com';
 
+type PemPair = { publicKey: string; privateKey: string };
+
 const pemKeys = {
   publicKeyEncoding: { type: 'spki', format: 'pem' } as const,
   privateKeyEncoding: { type: 'pkcs8', format: 'pem' } as const,
 };
 
-const rsa = generateKeyPairSync('rsa', { modulusLength: 2048, ...pemKeys });
-const rsaOther = generateKeyPairSync('rsa', { modulusLength: 2048, ...pemKeys });
-const ec = generateKeyPairSync('ec', { namedCurve: 'P-256', ...pemKeys });
-const ecOther = generateKeyPairSync('ec', { namedCurve: 'P-256', ...pemKeys });
+const rsa = generateKeyPairSync('rsa', { modulusLength: 2048, ...pemKeys }) as unknown as PemPair;
+const rsaOther = generateKeyPairSync('rsa', { modulusLength: 2048, ...pemKeys }) as unknown as PemPair;
+const ec = generateKeyPairSync('ec', { namedCurve: 'P-256', ...pemKeys }) as unknown as PemPair;
+const ecOther = generateKeyPairSync('ec', { namedCurve: 'P-256', ...pemKeys }) as unknown as PemPair;
 
 const nowSeconds = () => Math.floor(Date.now() / 1000);
 

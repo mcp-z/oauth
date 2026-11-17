@@ -3,6 +3,7 @@ import { addAccount, setToken } from '@mcp-z/oauth';
 import assert from 'assert';
 import Keyv from 'keyv';
 import { createAccountMe } from '../../../../src/lib/account-server/me.ts';
+import { plantCorruptEntry } from '../../../lib/corrupt-entry.ts';
 
 describe('createAccountMe', () => {
   const service = 'gmail';
@@ -93,7 +94,7 @@ describe('createAccountMe', () => {
       const store = new Keyv(map);
       const accountId = 'user@gmail.com';
       await addAccount(store, { service, accountId });
-      map.set(`keyv:${accountId}:${service}:token`, '{corrupt');
+      await plantCorruptEntry(store, map, `${accountId}:${service}:token`);
 
       const { tools } = createAccountMe({ service, store, logger, mode: 'loopback' });
       const meTool = tools.find((t) => t.name === 'account-me');

@@ -168,7 +168,8 @@ export function parseTokenKey(key: string): { accountId: string; service: string
 export async function listAccountIds(store: Keyv, service: string): Promise<string[]> {
   const accountIds: string[] = [];
 
-  const iterator = store.iterator?.(undefined);
+  // keyv 5 leaves `iterator` undefined on stores that cannot iterate; keyv 6 always defines it.
+  const iterator = store.iterator?.();
   if (!iterator) {
     return accountIds;
   }
