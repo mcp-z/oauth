@@ -103,18 +103,43 @@ export async function validateClient(store: Keyv, clientId: string, clientSecret
   return client.client_secret === clientSecret;
 }
 
+const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
+
+/**
+ * Match a requested redirect URI against a registered one
+ *
+ * `http` loopback URIs match on any port (RFC 8252 section 7.3); every other URI must be equal.
+ *
+ * @param registered - Redirect URI registered by the client
+ * @param requested - Redirect URI sent in the request
+ * @returns True if the requested URI is allowed by the registered one
+ */
+export function redirectUriMatches(registered: string, requested: string): boolean {
+  if (registered === requested) return true;
+  let reg: URL;
+  let req: URL;
+  try {
+    reg = new URL(registered);
+    req = new URL(requested);
+  } catch {
+    return false;
+  }
+  if (!LOOPBACK_HOSTS.has(reg.hostname) || !LOOPBACK_HOSTS.has(req.hostname)) return false;
+  return reg.protocol === 'http:' && req.protocol === 'http:' && reg.hostname === req.hostname && reg.username === req.username && reg.password === req.password && reg.pathname === req.pathname && reg.search === req.search && reg.hash === req.hash;
+}
+
 /**
  * Validate redirect URI for a client
  *
  * @param store - Keyv store for all DCR data
  * @param clientId - Client identifier
  * @param redirectUri - Redirect URI to validate
- * @returns True if redirect URI is registered
+ * @returns True if a registered redirect URI matches (`http` loopback URIs on any port)
  */
 export async function validateRedirectUri(store: Keyv, clientId: string, redirectUri: string): Promise<boolean> {
   const client = await getClient(store, clientId);
   if (!client || !client.redirect_uris) return false;
-  return client.redirect_uris.includes(redirectUri);
+  return client.redirect_uris.some((registered) => redirectUriMatches(registered, redirectUri));
 }
 
 /**

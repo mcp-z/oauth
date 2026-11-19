@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.3.0] - 2026-11-19
+
+### Added
+
+- `dcrUtils.redirectUriMatches(registered, requested)`: an `http` redirect URI on `localhost`, `127.0.0.1` or `[::1]` matches the registered one on any port, including when the registered URI names a different port; scheme, host, path, query and fragment must still be equal. Any other URI must match exactly.
+
+### Fixed
+
+- `dcrUtils.validateRedirectUri()` accepts a loopback redirect on any port, so a client registered with `http://127.0.0.1/callback` is no longer refused when it calls back on an OS-assigned port.
+
 ## [2.2.0]
 
 ### Added

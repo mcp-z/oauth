@@ -111,6 +111,44 @@ it('dcrUtils - validateRedirectUri checks URIs correctly', async () => {
   assert.strictEqual(invalidResult, false, 'Unregistered redirect URI should be invalid');
 });
 
+async function redirectMatchesThroughStore(registered: string, requested: string): Promise<boolean> {
+  const store = new Keyv({ store: new KeyvFile({ filename: clientStorePath }) });
+  const client = await dcrUtils.registerClient(store, { redirect_uris: [registered] });
+  try {
+    return await dcrUtils.validateRedirectUri(store, client.client_id, requested);
+  } finally {
+    await dcrUtils.deleteClient(store, client.client_id);
+  }
+}
+
+it('dcrUtils - validateRedirectUri accepts a loopback redirect on any port', async () => {
+  for (const host of ['127.0.0.1', 'localhost', '[::1]']) {
+    const matched = await redirectMatchesThroughStore(`http://${host}/callback`, `http://${host}:51234/callback`);
+    assert.strictEqual(matched, true, `${host} on an ephemeral port should match`);
+  }
+});
+
+it('dcrUtils - redirectUriMatches rejects what is not the same loopback URI', () => {
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback', 'http://127.0.0.1:51234/other'), false, 'different path');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback', 'http://localhost:51234/callback'), false, 'different loopback host');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback', 'https://127.0.0.1:51234/callback'), false, 'different scheme');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback?a=1', 'http://127.0.0.1:51234/callback?a=2'), false, 'different query');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback', 'not a url'), false, 'unparseable requested');
+  assert.strictEqual(dcrUtils.redirectUriMatches('not a url', 'http://127.0.0.1:51234/callback'), false, 'unparseable registered');
+  assert.strictEqual(dcrUtils.redirectUriMatches('https://app.example/cb', 'https://app.example:8443/cb'), false, 'non-loopback port');
+  assert.strictEqual(dcrUtils.redirectUriMatches('https://127.0.0.1/callback', 'https://127.0.0.1:51234/callback'), false, 'https loopback on another port');
+  assert.strictEqual(dcrUtils.redirectUriMatches('custom://localhost/cb', 'custom://localhost:51234/cb'), false, 'private-use scheme on another port');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback', 'http://127.0.0.1:51234/callback#frag'), false, 'fragment added');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback#a', 'http://127.0.0.1:51234/callback#b'), false, 'fragments differ');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback', 'http://user@127.0.0.1:51234/callback'), false, 'userinfo added');
+});
+
+it('dcrUtils - redirectUriMatches keeps exact equality and ignores the port of a registered loopback URI', () => {
+  assert.strictEqual(dcrUtils.redirectUriMatches('https://app.example/cb', 'https://app.example/cb'), true, 'exact non-loopback');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1:3000/callback', 'http://127.0.0.1:51234/callback'), true, 'registered port is ignored');
+  assert.strictEqual(dcrUtils.redirectUriMatches('http://127.0.0.1/callback?a=1', 'http://127.0.0.1:51234/callback?a=1'), true, 'same query');
+});
+
 it('dcrUtils - listClients returns all registered clients', async () => {
   const store = new Keyv({
     store: new KeyvFile({ filename: clientStorePath }),
