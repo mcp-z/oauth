@@ -68,6 +68,8 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.0.0",
+    "cross-spawn-cb": "^3.3.1",
+    "fs-remove-compat": "^1.0.4",
     "keyv-file": "5.3.3",
     "node-version-use": "^2.1.6",
     "ts-dev-stack": "^1.21.3",

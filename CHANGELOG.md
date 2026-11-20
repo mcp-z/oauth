@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.1] - 2026-11-20
+
+### Security
+
+- `openUrl` no longer passes the URL through `cmd` on Windows or a PowerShell string in WSL. A URL containing `|`, `%NAME%`, `^` or `$(...)` could run another command or be changed before it reached the browser; it now reaches the browser unchanged.
+
+### Fixed
+
+- `openUrl` rejection messages no longer include the URL, and a failure to start the browser no longer carries it in the error's properties. Messages are prefixed `openUrl:`; a URL that does not parse is now `openUrl: not a valid URL`.
+- `openUrl` opens the normalized form of the URL, so stray whitespace around it no longer reaches the browser.
+- On macOS, Windows and WSL, `openUrl` resolves once the launcher has exited and rejects if it exits non-zero, instead of resolving as soon as the launcher started. On Linux it still resolves when `xdg-open` starts.
+- On Windows, `openUrl` rejects with a plain error when PowerShell is not at its standard path, and no longer starts `cmd`.
+
 ## [2.3.0] - 2026-11-19
 
 ### Added

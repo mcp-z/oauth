@@ -19,7 +19,7 @@ export { type CimdClientMetadataDocument, type CimdResolver, CimdResolverError, 
 export type { AccessToken, AuthorizationCode, DcrClientInformation, DcrClientMetadata, DcrConfig, DcrErrorResponse, ProviderTokens, RegisteredClient } from './lib/dcr-types.ts';
 // DCR storage utilities - Public API
 export * as dcrUtils from './lib/dcr-utils.ts';
-// Browser launch - replaces the ESM-only `open` package
+// Browser launch
 export { default as openUrl } from './lib/open-url.ts';
 // RFC Metadata Types - Public API
 export type { RFC8414Metadata, RFC9728Metadata } from './lib/rfc-metadata-types.ts';
